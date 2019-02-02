@@ -23,8 +23,11 @@ import utils
 def line_chart_example():
     x = [0, 1, 2, 3, 4]
     y = [value ** 2 for value in x]
+    # task: add a cubed curve
+    y2 = [value ** 3 for value in x]
 
     plt.plot(x, y, label="X values squared")
+    plt.plot(x, y2, label="X values cubed")
 
     # labels!!
     plt.title("My First Plot :)")
@@ -32,10 +35,35 @@ def line_chart_example():
     plt.ylabel("Y values")
     plt.grid(True)
     plt.legend()
+
+    # lets say you want to change the axes ticks and labels
+    xtick_locations = list(range(0, 5, 1))
+    xtick_labels = [str(val) for val in xtick_locations]
+    plt.xticks(xtick_locations, xtick_labels)
     
 
     #plt.show() # shows a window
     plt.savefig("line_chart_example.pdf")
+
+def bar_chart_example():
+    # when we want a figure
+    plt.figure() # new figure for current figure
+    x = list(range(4))
+    y = list(range(100, 500, 100))
+
+    plt.bar(x, y)
+    plt.savefig("bar_chart_example.pdf")
+    # task: bar chart the ModelYear count information
+
+def pie_chart_example():
+    # when we want a figure
+    plt.figure() # new figure for current figure
+    x = list(range(4))
+    y = list(range(100, 500, 100))
+
+    plt.pie(y, labels=x, autopct="%1.2f%%")
+    plt.savefig("pie_chart_example.pdf")
+    # task: pie chart the ModelYear count information
 
 def get_frequencies(table, column_index):
     column = sorted(utils.get_column(table, column_index))
@@ -52,9 +80,22 @@ def get_frequencies(table, column_index):
 
     return values, counts
 
+def histogram_example():
+    plt.figure()
+
+    mean = 100
+    stddev = 5
+    x = np.random.normal(mean, stddev, 1000)
+
+    plt.hist(x, bins=20) # bins by default is 10
+    plt.savefig("histogram_example.pdf")
+
 # lets chart!!
 def main():
     line_chart_example()
+    bar_chart_example()
+    pie_chart_example()
+    histogram_example()
 
     values, counts = get_frequencies(utils.msrp_table, utils.header.index("ModelYear"))
     print(values)
