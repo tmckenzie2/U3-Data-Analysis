@@ -94,6 +94,48 @@ def histogram_example():
     plt.hist(x, bins=20) # bins by default is 10
     plt.savefig("histogram_example.pdf")
 
+def group_by(table, column_index):
+    # first identify unique values in the column
+    group_names = sorted(list(set(utils.get_column(table, column_index))))
+    print(group_names)
+
+    # now, we need a list of subtables
+    # each subtable corresponds to a value in group_names
+    # parallel arrays
+    groups = [[] for name in group_names]
+    for row in table:
+        # which group does it belong to?
+        group_by_value = row[column_index]
+        index = group_names.index(group_by_value)
+        groups[index].append(row)
+
+    return group_names, groups
+
+def box_plot_example():
+    plt.figure()
+    # the box corresponds to the 1st and 3rd quartiles of the data distribution
+    # the line in the "middle" of the box is the median (AKA 2nd quartile)
+    # whiskers correspond to +/- 1.5 * IQR
+    # points or stars denote outliers (outside of whiskers)
+    # lets do dummy data first
+    mean = 100
+    stdev = 5
+    # we will have two boxes, so we need a list of 2 distributions
+    # 1 list per distribution
+    x1 = np.random.normal(mean, stdev, 1000) # 1000 samples
+    x2 = np.random.normal(mean, stdev, 100) # 100 samples
+    plt.boxplot([x1, x2])
+    plt.xticks([1, 2], ["1000 samples", "100 samples"])
+    # how to add an annotation to a plot
+    ax = plt.gca() # get current axes
+    ax.annotate("mean=%d\nstdev=%d" %(mean, stdev), xy=(1.5, 100.0), 
+        xycoords="data", horizontalalignment="center")
+    # xycoords="axes fraction" 0,0 in the bottom left and 1,1 in upper right
+    ax.annotate("mean=%d\nstdev=%d" %(mean, stdev), xy=(0.5, 0.5), 
+        xycoords="axes fraction", horizontalalignment="center", color="b")
+    plt.savefig("box_plot_example.pdf")
+
+
 # lets chart!!
 def main():
     line_chart_example()
@@ -109,6 +151,12 @@ def main():
     # solutions to tasks
     bar_chart_example(values, counts, "model_year_bar_chart.pdf")
     pie_chart_example(values, counts, "model_year_pie_chart.pdf")
+
+    year_names, year_groups = group_by(utils.msrp_table, utils.header.index("ModelYear"))
+    print(year_names)
+    print(year_groups)
+
+    box_plot_example()
 
 if __name__ == "__main__":
     main()
