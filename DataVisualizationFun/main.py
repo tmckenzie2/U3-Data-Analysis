@@ -45,24 +45,28 @@ def line_chart_example():
     #plt.show() # shows a window
     plt.savefig("line_chart_example.pdf")
 
-def bar_chart_example():
+def bar_chart_example(x=None, y=None, filename="bar_chart_example.pdf"):
     # when we want a figure
     plt.figure() # new figure for current figure
-    x = list(range(4))
-    y = list(range(100, 500, 100))
+    if x is None:
+        x = list(range(4))
+    if y is None:
+        y = list(range(100, 500, 100))
 
     plt.bar(x, y)
-    plt.savefig("bar_chart_example.pdf")
+    plt.savefig(filename)
     # task: bar chart the ModelYear count information
 
-def pie_chart_example():
+def pie_chart_example(x=None, y=None, filename="pie_chart_example.pdf"):
     # when we want a figure
     plt.figure() # new figure for current figure
-    x = list(range(4))
-    y = list(range(100, 500, 100))
+    if x is None:
+        x = list(range(4))
+    if y is None:
+        y = list(range(100, 500, 100))
 
     plt.pie(y, labels=x, autopct="%1.2f%%")
-    plt.savefig("pie_chart_example.pdf")
+    plt.savefig(filename)
     # task: pie chart the ModelYear count information
 
 def get_frequencies(table, column_index):
@@ -98,8 +102,13 @@ def main():
     histogram_example()
 
     values, counts = get_frequencies(utils.msrp_table, utils.header.index("ModelYear"))
+    # parallel arrays
     print(values)
     print(counts)
+
+    # solutions to tasks
+    bar_chart_example(values, counts, "model_year_bar_chart.pdf")
+    pie_chart_example(values, counts, "model_year_pie_chart.pdf")
 
 if __name__ == "__main__":
     main()
