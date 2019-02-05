@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 import utils
 
+
 # data visualization fun
 # EDA: exploratory data analysis
 # goals of data vis:
@@ -69,21 +70,6 @@ def pie_chart_example(x=None, y=None, filename="pie_chart_example.pdf"):
     plt.savefig(filename)
     # task: pie chart the ModelYear count information
 
-def get_frequencies(table, column_index):
-    column = sorted(utils.get_column(table, column_index))
-    values = []
-    counts = []
-
-    for value in column:
-        if value not in values:
-            values.append(value)
-            # first time we have seen this value
-            counts.append(1)
-        else: # we've seen it before, the list is sorted...
-            counts[-1] += 1
-
-    return values, counts
-
 def histogram_example():
     plt.figure()
 
@@ -93,23 +79,6 @@ def histogram_example():
 
     plt.hist(x, bins=20) # bins by default is 10
     plt.savefig("histogram_example.pdf")
-
-def group_by(table, column_index):
-    # first identify unique values in the column
-    group_names = sorted(list(set(utils.get_column(table, column_index))))
-    print(group_names)
-
-    # now, we need a list of subtables
-    # each subtable corresponds to a value in group_names
-    # parallel arrays
-    groups = [[] for name in group_names]
-    for row in table:
-        # which group does it belong to?
-        group_by_value = row[column_index]
-        index = group_names.index(group_by_value)
-        groups[index].append(row)
-
-    return group_names, groups
 
 def box_plot_example():
     plt.figure()
@@ -133,8 +102,21 @@ def box_plot_example():
     # xycoords="axes fraction" 0,0 in the bottom left and 1,1 in upper right
     ax.annotate("mean=%d\nstdev=%d" %(mean, stdev), xy=(0.5, 0.5), 
         xycoords="axes fraction", horizontalalignment="center", color="b")
+    # task: define/call a function that creates a box plot of MSRP data grouped
+    # by ModelYear
+    # hint: write a utility function (or ??) to get the MSRP data only out of
+    # the groups
     plt.savefig("box_plot_example.pdf")
 
+def mrsp_grouped_by_year_box_plot_example(msrps, year_names):
+    plt.figure()
+    plt.boxplot(msrps)
+    xtick_locs = list(range(1, len(msrps) + 1))
+    plt.xticks(xtick_locs, year_names)
+    plt.title("MSRP Grouped by Model Year")
+    plt.xlabel("Model Year")
+    plt.ylabel("MSRP")
+    plt.savefig("msrp_grouped_by_year_box_plot_example.pdf")
 
 # lets chart!!
 def main():
@@ -143,20 +125,28 @@ def main():
     pie_chart_example()
     histogram_example()
 
-    values, counts = get_frequencies(utils.msrp_table, utils.header.index("ModelYear"))
+    values, counts = utils.get_frequencies(utils.msrp_table, utils.header.index("ModelYear"))
     # parallel arrays
     print(values)
     print(counts)
 
-    # solutions to tasks
+    # solutions to bar and pie chart tasks
     bar_chart_example(values, counts, "model_year_bar_chart.pdf")
     pie_chart_example(values, counts, "model_year_pie_chart.pdf")
 
-    year_names, year_groups = group_by(utils.msrp_table, utils.header.index("ModelYear"))
+    year_names, year_groups = utils.group_by(utils.msrp_table, utils.header.index("ModelYear"))
     print(year_names)
     print(year_groups)
 
     box_plot_example()
+
+    # solution to msrp grouped by model year box plot task
+    print("operating on a longer table for testing msrp grouped by year")
+    year_names, year_msrp_groups = utils.group_by(utils.msrp_table_long, utils.header.index("ModelYear"), 
+        include_only_column_index=utils.header.index("MSRP"))
+    print(year_names)
+    print(year_msrp_groups)
+    mrsp_grouped_by_year_box_plot_example(year_msrp_groups, year_names)
 
 if __name__ == "__main__":
     main()
