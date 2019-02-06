@@ -54,7 +54,7 @@ def group_by(table, column_index, include_only_column_index=None):
         group_by_value = row[column_index]
         index = group_names.index(group_by_value)
         if include_only_column_index is None:
-            groups[index].append(row)
+            groups[index].append(row.copy()) # note: shallow copy
         else:
             groups[index].append(row[include_only_column_index])
 
