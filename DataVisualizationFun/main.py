@@ -161,6 +161,18 @@ def main():
     # task: write a function to compute the frequencies for the
     # bins defined by cutoffs
     # check your work with numpy np_freqs
+    freqs = compute_bin_frequencies(values, cutoffs)
+    print("freqs:", freqs)
+    print("np_freqs:", np_freqs)
+
+def compute_bin_frequencies(values, cutoffs):
+    freqs = [0] * len(cutoffs)
+    for val in values:
+        for i, cutoff in enumerate(cutoffs):
+            if val <= cutoff:
+                freqs[i] += 1
+                break
+    return freqs
 
 def compute_equal_widths_cutoffs(values, num_bins):
     # first things first...need to compute the width using the range
