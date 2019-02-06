@@ -148,5 +148,35 @@ def main():
     print(year_msrp_groups)
     mrsp_grouped_by_year_box_plot_example(year_msrp_groups, year_names)
 
+    # discretization
+    # converting a numeric (continuous) attribute to discrete (categorical)
+    # we will implement equal width bin discretization
+    values = sorted(np.random.choice(100, 20)) # 20 values in [0, 100)
+    print(values)
+    cutoffs = compute_equal_widths_cutoffs(values, 5)
+    print("cutoffs:", cutoffs)
+    # compare to np.histogram()
+    np_freqs, np_cutoffs = np.histogram(values, 5)
+    print("np_cutoffs:", np_cutoffs[1:])
+    # task: write a function to compute the frequencies for the
+    # bins defined by cutoffs
+    # check your work with numpy np_freqs
+
+def compute_equal_widths_cutoffs(values, num_bins):
+    # first things first...need to compute the width using the range
+    values_range = max(values) - min(values)
+    width = values_range / num_bins
+    # width is a float...
+    # using range() we can compute the cutoffs
+    # if possible, your application allows for it, convert min, max, width
+    # to intgers
+    # we will work with floats 
+    # np.arange() works with floats
+    cutoffs = list(np.arange(min(values) + width, max(values) + width, width))
+    # round each cutoff to 1 decimal place before we return it
+    cutoffs = [round(cutoff, 1) for cutoff in cutoffs]
+    return cutoffs
+
+
 if __name__ == "__main__":
     main()
