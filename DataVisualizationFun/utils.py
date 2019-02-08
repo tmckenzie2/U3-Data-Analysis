@@ -1,3 +1,5 @@
+import numpy as np
+
 header = ["CarName", "ModelYear", "MSRP"]
 msrp_table = [["ford pinto", 75, 2769],
             ["toyota corolla", 75, 2711],
@@ -59,3 +61,27 @@ def group_by(table, column_index, include_only_column_index=None):
             groups[index].append(row[include_only_column_index])
 
     return group_names, groups
+
+def compute_bin_frequencies(values, cutoffs):
+    freqs = [0] * len(cutoffs)
+    for val in values:
+        for i, cutoff in enumerate(cutoffs):
+            if val <= cutoff:
+                freqs[i] += 1
+                break
+    return freqs
+
+def compute_equal_widths_cutoffs(values, num_bins):
+    # first things first...need to compute the width using the range
+    values_range = max(values) - min(values)
+    width = values_range / num_bins
+    # width is a float...
+    # using range() we can compute the cutoffs
+    # if possible, your application allows for it, convert min, max, width
+    # to intgers
+    # we will work with floats 
+    # np.arange() works with floats
+    cutoffs = list(np.arange(min(values) + width, max(values) + width, width))
+    # round each cutoff to 1 decimal place before we return it
+    cutoffs = [round(cutoff, 1) for cutoff in cutoffs]
+    return cutoffs

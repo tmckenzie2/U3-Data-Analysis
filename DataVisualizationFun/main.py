@@ -153,7 +153,7 @@ def main():
     # we will implement equal width bin discretization
     values = sorted(np.random.choice(100, 20)) # 20 values in [0, 100)
     print(values)
-    cutoffs = compute_equal_widths_cutoffs(values, 5)
+    cutoffs = utils.compute_equal_widths_cutoffs(values, 5)
     print("cutoffs:", cutoffs)
     # compare to np.histogram()
     np_freqs, np_cutoffs = np.histogram(values, 5)
@@ -161,33 +161,12 @@ def main():
     # task: write a function to compute the frequencies for the
     # bins defined by cutoffs
     # check your work with numpy np_freqs
-    freqs = compute_bin_frequencies(values, cutoffs)
+    freqs = utils.compute_bin_frequencies(values, cutoffs)
     print("freqs:", freqs)
     print("np_freqs:", np_freqs)
-
-def compute_bin_frequencies(values, cutoffs):
-    freqs = [0] * len(cutoffs)
-    for val in values:
-        for i, cutoff in enumerate(cutoffs):
-            if val <= cutoff:
-                freqs[i] += 1
-                break
-    return freqs
-
-def compute_equal_widths_cutoffs(values, num_bins):
-    # first things first...need to compute the width using the range
-    values_range = max(values) - min(values)
-    width = values_range / num_bins
-    # width is a float...
-    # using range() we can compute the cutoffs
-    # if possible, your application allows for it, convert min, max, width
-    # to intgers
-    # we will work with floats 
-    # np.arange() works with floats
-    cutoffs = list(np.arange(min(values) + width, max(values) + width, width))
-    # round each cutoff to 1 decimal place before we return it
-    cutoffs = [round(cutoff, 1) for cutoff in cutoffs]
-    return cutoffs
+    # now we can plot our own histogram using cutoffs, freqs, and a bar chart
+    # TODO: adjust bar widths to be width of bins
+    bar_chart_example(cutoffs, freqs, "our_own_histogram_example.pdf")
 
 
 if __name__ == "__main__":
